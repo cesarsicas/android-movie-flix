@@ -23,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import br.com.cesarsicas.androidmovieflix.presentation.common.RequireAdminAuth
 import br.com.cesarsicas.androidmovieflix.presentation.navigation.Routes
 
 @Composable
@@ -31,7 +30,7 @@ fun AdminWatchPartyScreen(
     navController: NavHostController,
     viewModel: AdminWatchPartyViewModel = hiltViewModel(),
 ) {
-    RequireAdminAuth(navController) {
+    AdminScaffold(navController) {
         val state by viewModel.state.collectAsState()
 
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {

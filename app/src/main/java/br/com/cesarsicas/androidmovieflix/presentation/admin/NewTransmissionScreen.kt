@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import br.com.cesarsicas.androidmovieflix.domain.model.WatchPartyMovieModel
-import br.com.cesarsicas.androidmovieflix.presentation.common.RequireAdminAuth
 import br.com.cesarsicas.androidmovieflix.presentation.navigation.Routes
 
 @Composable
@@ -34,7 +33,7 @@ fun NewTransmissionScreen(
     navController: NavHostController,
     viewModel: NewTransmissionViewModel = hiltViewModel(),
 ) {
-    RequireAdminAuth(navController) {
+    AdminScaffold(navController) {
         val state by viewModel.state.collectAsState()
 
         LaunchedEffect(Unit) {

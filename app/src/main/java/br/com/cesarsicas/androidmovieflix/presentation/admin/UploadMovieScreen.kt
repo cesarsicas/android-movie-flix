@@ -28,7 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import br.com.cesarsicas.androidmovieflix.presentation.common.RequireAdminAuth
 import br.com.cesarsicas.androidmovieflix.presentation.navigation.Routes
 
 @Composable
@@ -36,7 +35,7 @@ fun UploadMovieScreen(
     navController: NavHostController,
     viewModel: UploadMovieViewModel = hiltViewModel(),
 ) {
-    RequireAdminAuth(navController) {
+    AdminScaffold(navController) {
         val state by viewModel.state.collectAsState()
         val context = LocalContext.current
 
