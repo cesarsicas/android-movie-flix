@@ -2,9 +2,11 @@ package br.com.cesarsicas.androidmovieflix.data.mapper
 
 import br.com.cesarsicas.androidmovieflix.data.remote.dto.MovieReleaseDto
 import br.com.cesarsicas.androidmovieflix.data.remote.dto.TitleDetailsResponseDto
+import br.com.cesarsicas.androidmovieflix.data.remote.dto.TitleReviewDto
 import br.com.cesarsicas.androidmovieflix.data.remote.dto.TitleSearchResponseDto
 import br.com.cesarsicas.androidmovieflix.domain.model.MovieModel
 import br.com.cesarsicas.androidmovieflix.domain.model.TitleDetailsModel
+import br.com.cesarsicas.androidmovieflix.domain.model.TitleReviewModel
 
 fun MovieReleaseDto.toMovieModel() = MovieModel(
     id = id,
@@ -24,6 +26,15 @@ fun TitleSearchResponseDto.toMovieModel() = MovieModel(
     description = "",
     releaseDate = "",
     type = type,
+)
+
+fun TitleReviewDto.toTitleReviewModel() = TitleReviewModel(
+    id = id,
+    externalId = externalId,
+    rating = rating,
+    review = review,
+    userName = userName,
+    createdAt = createdAt,
 )
 
 fun TitleDetailsResponseDto.toTitleDetailsModel() = TitleDetailsModel(
