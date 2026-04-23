@@ -4,6 +4,7 @@ import br.com.cesarsicas.androidmovieflix.data.local.ProfileCache
 import br.com.cesarsicas.androidmovieflix.data.local.TokenStore
 import br.com.cesarsicas.androidmovieflix.data.mapper.toUserModel
 import br.com.cesarsicas.androidmovieflix.data.remote.api.AuthApi
+import br.com.cesarsicas.androidmovieflix.data.remote.dto.AdminLoginRequestDto
 import br.com.cesarsicas.androidmovieflix.data.remote.dto.LoginRequestDto
 import br.com.cesarsicas.androidmovieflix.data.remote.dto.SignupRequestDto
 import br.com.cesarsicas.androidmovieflix.domain.model.UserModel
@@ -31,5 +32,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logout() {
         tokenStore.clearUserToken()
         profileCache.clear()
+    }
+
+    override suspend fun adminLogin(email: String, password: String) {
+        val response = authApi.adminLogin(AdminLoginRequestDto(email, password))
+        tokenStore.saveAdminToken(response.tokenJWT)
     }
 }

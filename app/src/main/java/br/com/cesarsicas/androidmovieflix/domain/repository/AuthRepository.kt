@@ -6,4 +6,5 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): UserModel
     suspend fun signup(name: String, email: String, password: String): UserModel
     suspend fun logout()
+    suspend fun adminLogin(email: String, password: String)
 }

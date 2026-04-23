@@ -11,6 +11,7 @@ import br.com.cesarsicas.androidmovieflix.presentation.home.HomeScreen
 import br.com.cesarsicas.androidmovieflix.presentation.profile.ProfileEditScreen
 import br.com.cesarsicas.androidmovieflix.presentation.profile.ProfileScreen
 import br.com.cesarsicas.androidmovieflix.presentation.search.SearchResultScreen
+import br.com.cesarsicas.androidmovieflix.presentation.watchparty.WatchPartyScreen
 
 fun NavGraphBuilder.userGraph(navController: NavHostController) {
     composable(Routes.HOME) {
@@ -54,6 +55,6 @@ fun NavGraphBuilder.userGraph(navController: NavHostController) {
         ProfileEditScreen(navController = navController)
     }
     composable(Routes.WATCH_PARTY) {
-        PlaceholderScreen(navController = navController, title = "Watch Party")
+        WatchPartyScreen(navController = navController)
     }
 }

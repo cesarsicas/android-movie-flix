@@ -1,18 +1,25 @@
 package br.com.cesarsicas.androidmovieflix.presentation.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import br.com.cesarsicas.androidmovieflix.presentation.admin.AdminHomeScreen
+import br.com.cesarsicas.androidmovieflix.presentation.admin.AdminLoginScreen
 
 fun NavGraphBuilder.adminGraph(navController: NavHostController) {
     composable(Routes.ADMIN_ENTRY) {
-        PlaceholderScreen(navController = navController, title = "Admin (entry redirect)")
+        LaunchedEffect(Unit) {
+            navController.navigate(Routes.ADMIN_HOME) {
+                popUpTo(Routes.ADMIN_ENTRY) { inclusive = true }
+            }
+        }
     }
     composable(Routes.ADMIN_LOGIN) {
-        PlaceholderScreen(navController = navController, title = "Admin Login")
+        AdminLoginScreen(navController = navController)
     }
     composable(Routes.ADMIN_HOME) {
-        PlaceholderScreen(navController = navController, title = "Admin Home")
+        AdminHomeScreen(navController = navController)
     }
     composable(Routes.ADMIN_WATCH_PARTY) {
         PlaceholderScreen(navController = navController, title = "Admin Watch Party")
