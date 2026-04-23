@@ -5,26 +5,31 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import br.com.cesarsicas.androidmovieflix.presentation.details.MovieDetailsScreen
+import br.com.cesarsicas.androidmovieflix.presentation.home.HomeScreen
+import br.com.cesarsicas.androidmovieflix.presentation.search.SearchResultScreen
 
 fun NavGraphBuilder.userGraph(navController: NavHostController) {
     composable(Routes.HOME) {
-        PlaceholderScreen(
-            navController = navController,
-            title = "Home",
-        )
+        HomeScreen(navController = navController)
     }
-    composable(Routes.AUTH) {
+    composable(
+        route = Routes.AUTH_TEMPLATE,
+        arguments = listOf(
+            navArgument(Routes.AUTH_MODE_ARG) {
+                type = NavType.StringType
+                defaultValue = "login"
+            },
+        ),
+    ) {
         PlaceholderScreen(navController = navController, title = "Auth")
     }
     composable(
         route = Routes.TITLE_DETAILS_TEMPLATE,
-        arguments = listOf(navArgument(Routes.TITLE_DETAILS_ARG) { type = NavType.StringType }),
+        arguments = listOf(navArgument(Routes.TITLE_DETAILS_ARG) { type = NavType.IntType }),
     ) { entry ->
-        val externalId = entry.arguments?.getString(Routes.TITLE_DETAILS_ARG).orEmpty()
-        PlaceholderScreen(
-            navController = navController,
-            title = "Title Details (externalId=$externalId)",
-        )
+        val externalId = entry.arguments?.getInt(Routes.TITLE_DETAILS_ARG) ?: 0
+        MovieDetailsScreen(externalId = externalId, navController = navController)
     }
     composable(
         route = Routes.TITLE_SEARCH_TEMPLATE,
@@ -36,10 +41,7 @@ fun NavGraphBuilder.userGraph(navController: NavHostController) {
         ),
     ) { entry ->
         val query = entry.arguments?.getString(Routes.TITLE_SEARCH_ARG).orEmpty()
-        PlaceholderScreen(
-            navController = navController,
-            title = "Search Results (query=$query)",
-        )
+        SearchResultScreen(query = query, navController = navController)
     }
     composable(Routes.PROFILE) {
         PlaceholderScreen(navController = navController, title = "Profile")

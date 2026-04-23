@@ -39,8 +39,8 @@ fun PlaceholderScreen(
         Text(text = "Navigate to:", style = MaterialTheme.typography.titleSmall)
 
         NavButton(navController, "Home", Routes.HOME)
-        NavButton(navController, "Auth", Routes.AUTH)
-        NavButton(navController, "Title Details (sample)", Routes.titleDetails("sample-id"))
+        NavButton(navController, "Auth", Routes.auth())
+        NavButton(navController, "Title Details (sample)", Routes.titleDetails(12345))
         NavButton(navController, "Search (query=matrix)", Routes.titleSearch("matrix"))
         NavButton(navController, "Profile", Routes.PROFILE)
         NavButton(navController, "Profile Edit", Routes.PROFILE_EDIT)
