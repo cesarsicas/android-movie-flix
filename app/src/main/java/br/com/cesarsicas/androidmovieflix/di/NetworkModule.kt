@@ -5,6 +5,7 @@ import br.com.cesarsicas.androidmovieflix.data.remote.api.AuthApi
 import br.com.cesarsicas.androidmovieflix.data.remote.api.TitleApi
 import br.com.cesarsicas.androidmovieflix.data.remote.api.TransmissionApi
 import br.com.cesarsicas.androidmovieflix.data.remote.api.UserApi
+import br.com.cesarsicas.androidmovieflix.data.remote.interceptor.AuthInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -31,8 +32,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(
                 HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }

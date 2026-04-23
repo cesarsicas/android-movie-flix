@@ -29,14 +29,18 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         AppTopBar(
             onSearchSubmit = { query -> navController.navigate(Routes.titleSearch(query)) },
             onWatchPartyClick = { navController.navigate(Routes.WATCH_PARTY) },
             onLogoClick = { navController.navigate(Routes.HOME) },
-            onAuthClick = { navController.navigate(Routes.PROFILE) },
-            isLoggedIn = false,
+            onAuthClick = {
+                if (isLoggedIn) navController.navigate(Routes.PROFILE)
+                else navController.navigate(Routes.auth())
+            },
+            isLoggedIn = isLoggedIn,
         )
         when (val s = state) {
             is UiState.Loading -> Box(

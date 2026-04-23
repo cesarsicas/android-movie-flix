@@ -5,8 +5,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import br.com.cesarsicas.androidmovieflix.presentation.auth.AuthScreen
 import br.com.cesarsicas.androidmovieflix.presentation.details.MovieDetailsScreen
 import br.com.cesarsicas.androidmovieflix.presentation.home.HomeScreen
+import br.com.cesarsicas.androidmovieflix.presentation.profile.ProfileEditScreen
+import br.com.cesarsicas.androidmovieflix.presentation.profile.ProfileScreen
 import br.com.cesarsicas.androidmovieflix.presentation.search.SearchResultScreen
 
 fun NavGraphBuilder.userGraph(navController: NavHostController) {
@@ -21,8 +24,9 @@ fun NavGraphBuilder.userGraph(navController: NavHostController) {
                 defaultValue = "login"
             },
         ),
-    ) {
-        PlaceholderScreen(navController = navController, title = "Auth")
+    ) { entry ->
+        val mode = entry.arguments?.getString(Routes.AUTH_MODE_ARG) ?: "login"
+        AuthScreen(mode = mode, navController = navController)
     }
     composable(
         route = Routes.TITLE_DETAILS_TEMPLATE,
@@ -44,10 +48,10 @@ fun NavGraphBuilder.userGraph(navController: NavHostController) {
         SearchResultScreen(query = query, navController = navController)
     }
     composable(Routes.PROFILE) {
-        PlaceholderScreen(navController = navController, title = "Profile")
+        ProfileScreen(navController = navController)
     }
     composable(Routes.PROFILE_EDIT) {
-        PlaceholderScreen(navController = navController, title = "Profile Edit")
+        ProfileEditScreen(navController = navController)
     }
     composable(Routes.WATCH_PARTY) {
         PlaceholderScreen(navController = navController, title = "Watch Party")

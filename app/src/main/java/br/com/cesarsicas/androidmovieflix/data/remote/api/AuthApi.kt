@@ -1,3 +1,15 @@
 package br.com.cesarsicas.androidmovieflix.data.remote.api
 
-interface AuthApi
+import br.com.cesarsicas.androidmovieflix.data.remote.dto.AuthResponseDto
+import br.com.cesarsicas.androidmovieflix.data.remote.dto.LoginRequestDto
+import br.com.cesarsicas.androidmovieflix.data.remote.dto.SignupRequestDto
+import retrofit2.http.Body
+import retrofit2.http.POST
+
+interface AuthApi {
+    @POST("auth/login")
+    suspend fun login(@Body request: LoginRequestDto): AuthResponseDto
+
+    @POST("auth/register")
+    suspend fun register(@Body request: SignupRequestDto): AuthResponseDto
+}
