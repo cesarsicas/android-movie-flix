@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import br.com.cesarsicas.androidmovieflix.presentation.admin.AdminHomeScreen
 import br.com.cesarsicas.androidmovieflix.presentation.admin.AdminLoginScreen
+import br.com.cesarsicas.androidmovieflix.presentation.admin.AdminWatchPartyScreen
+import br.com.cesarsicas.androidmovieflix.presentation.admin.NewTransmissionScreen
+import br.com.cesarsicas.androidmovieflix.presentation.admin.UploadMovieScreen
 
 fun NavGraphBuilder.adminGraph(navController: NavHostController) {
     composable(Routes.ADMIN_ENTRY) {
@@ -22,12 +25,12 @@ fun NavGraphBuilder.adminGraph(navController: NavHostController) {
         AdminHomeScreen(navController = navController)
     }
     composable(Routes.ADMIN_WATCH_PARTY) {
-        PlaceholderScreen(navController = navController, title = "Admin Watch Party")
+        AdminWatchPartyScreen(navController = navController)
     }
     composable(Routes.ADMIN_NEW_TRANSMISSION) {
-        PlaceholderScreen(navController = navController, title = "New Transmission")
+        NewTransmissionScreen(navController = navController)
     }
     composable(Routes.ADMIN_UPLOAD_MOVIE) {
-        PlaceholderScreen(navController = navController, title = "Upload Movie")
+        UploadMovieScreen(navController = navController)
     }
 }
