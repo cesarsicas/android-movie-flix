@@ -6,12 +6,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TitleSearchResponseDto(
     val name: String,
-    val relevance: Int,
-    val type: String,
+    val relevance: Int? = null,
+    val type: String? = null,
     val id: Int,
-    val year: Int,
-    @SerialName("result_type") val resultType: String,
-    @SerialName("tmdb_id") val tmdbId: Int,
-    @SerialName("tmdb_type") val tmdbType: String,
-    @SerialName("image_url") val imageUrl: String,
+    val year: Int? = null,
+    @SerialName("result_type") val resultType: String = "title",
+    @SerialName("tmdb_id") val tmdbId: Int? = null,
+    @SerialName("tmdb_type") val tmdbType: String? = null,
+    @SerialName("image_url") val imageUrl: String? = null,
+)
+
+@Serializable
+data class AutocompleteSearchResponseDto(
+    val results: List<TitleSearchResponseDto>,
 )

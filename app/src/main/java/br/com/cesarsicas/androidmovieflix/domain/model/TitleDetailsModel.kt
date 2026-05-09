@@ -27,4 +27,5 @@ data class TitleDetailsModel(
     val originalLanguage: String?,
     val trailer: String?,
     val trailerThumbnail: String?,
+    val cast: List<CastMemberModel>?,
 )

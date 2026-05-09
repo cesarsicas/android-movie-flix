@@ -30,6 +30,7 @@ fun AppTopBar(
     onLogoClick: () -> Unit,
     onAuthClick: () -> Unit,
     isLoggedIn: Boolean,
+    onBrowseClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     var query by remember { mutableStateOf("") }
@@ -59,6 +60,9 @@ fun AppTopBar(
             TextButton(onClick = onLogoClick) { Text("ReactFlix") }
         },
         actions = {
+            if (onBrowseClick != null) {
+                TextButton(onClick = onBrowseClick) { Text("Browse") }
+            }
             TextButton(onClick = onWatchPartyClick) { Text("Watch Party") }
             TextButton(onClick = onAuthClick) {
                 Text(if (isLoggedIn) "Profile" else "Login")

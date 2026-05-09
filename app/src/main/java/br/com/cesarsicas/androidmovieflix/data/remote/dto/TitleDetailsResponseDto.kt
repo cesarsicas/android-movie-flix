@@ -31,4 +31,5 @@ data class TitleDetailsResponseDto(
     @SerialName("original_language") val originalLanguage: String? = null,
     val trailer: String? = null,
     @SerialName("trailer_thumbnail") val trailerThumbnail: String? = null,
+    val cast: List<CastMemberDto>? = null,
 )

@@ -6,8 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import br.com.cesarsicas.androidmovieflix.presentation.auth.AuthScreen
+import br.com.cesarsicas.androidmovieflix.presentation.browse.BrowseScreen
+import br.com.cesarsicas.androidmovieflix.presentation.chat.ChatScreen
 import br.com.cesarsicas.androidmovieflix.presentation.details.MovieDetailsScreen
 import br.com.cesarsicas.androidmovieflix.presentation.home.HomeScreen
+import br.com.cesarsicas.androidmovieflix.presentation.person.PersonDetailsScreen
 import br.com.cesarsicas.androidmovieflix.presentation.profile.ProfileEditScreen
 import br.com.cesarsicas.androidmovieflix.presentation.profile.ProfileScreen
 import br.com.cesarsicas.androidmovieflix.presentation.search.SearchResultScreen
@@ -47,6 +50,19 @@ fun NavGraphBuilder.userGraph(navController: NavHostController) {
     ) { entry ->
         val query = entry.arguments?.getString(Routes.TITLE_SEARCH_ARG).orEmpty()
         SearchResultScreen(query = query, navController = navController)
+    }
+    composable(
+        route = Routes.PERSON_DETAILS_TEMPLATE,
+        arguments = listOf(navArgument(Routes.PERSON_DETAILS_ARG) { type = NavType.IntType }),
+    ) { entry ->
+        val personId = entry.arguments?.getInt(Routes.PERSON_DETAILS_ARG) ?: 0
+        PersonDetailsScreen(personId = personId, navController = navController)
+    }
+    composable(Routes.BROWSE) {
+        BrowseScreen(navController = navController)
+    }
+    composable(Routes.CHAT) {
+        ChatScreen()
     }
     composable(Routes.PROFILE) {
         ProfileScreen(navController = navController)

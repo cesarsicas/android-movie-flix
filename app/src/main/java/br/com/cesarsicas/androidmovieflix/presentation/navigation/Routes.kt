@@ -15,6 +15,13 @@ object Routes {
     const val TITLE_SEARCH_TEMPLATE = "title/search?$TITLE_SEARCH_ARG={$TITLE_SEARCH_ARG}"
     fun titleSearch(query: String) = "title/search?$TITLE_SEARCH_ARG=$query"
 
+    const val PERSON_DETAILS_ARG = "personId"
+    const val PERSON_DETAILS_TEMPLATE = "person/{$PERSON_DETAILS_ARG}"
+    fun personDetails(personId: Int) = "person/$personId"
+
+    const val BROWSE = "browse"
+    const val CHAT = "chat"
+
     const val PROFILE = "profile"
     const val PROFILE_EDIT = "profile/edit"
     const val WATCH_PARTY = "watch-party"

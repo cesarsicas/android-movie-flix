@@ -41,6 +41,7 @@ fun HomeScreen(
                 else navController.navigate(Routes.auth())
             },
             isLoggedIn = isLoggedIn,
+            onBrowseClick = { navController.navigate(Routes.BROWSE) },
         )
         when (val s = state) {
             is UiState.Loading -> Box(
