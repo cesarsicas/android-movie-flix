@@ -1,21 +1,24 @@
 package br.com.cesarsicas.androidmovieflix.presentation.browse
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -25,7 +28,6 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,14 +42,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import br.com.cesarsicas.androidmovieflix.presentation.common.AppTopBar
-import br.com.cesarsicas.androidmovieflix.presentation.common.MovieItem
 import br.com.cesarsicas.androidmovieflix.presentation.navigation.Routes
-import androidx.compose.foundation.BorderStroke
 
 private val TITLE_TYPES = listOf(
     null to "All",
@@ -68,6 +70,15 @@ private val SORT_OPTIONS = listOf(
     "title_desc" to "Title Z–A",
 )
 
+private fun typeLabel(type: String) = when (type) {
+    "movie" -> "MOVIE"
+    "tv_series" -> "TV"
+    "tv_miniseries" -> "MINI"
+    "tv_special" -> "SPEC"
+    "short_film" -> "SHORT"
+    else -> type.uppercase().take(5)
+}
+
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun BrowseScreen(
@@ -75,7 +86,7 @@ fun BrowseScreen(
     viewModel: BrowseViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
-    val gridState = rememberLazyGridState()
+    val listState = rememberLazyListState()
     var filtersExpanded by remember { mutableStateOf(false) }
     var sortMenuExpanded by remember { mutableStateOf(false) }
     var localType by remember { mutableStateOf<String?>(null) }
@@ -83,8 +94,8 @@ fun BrowseScreen(
     var localSort by remember { mutableStateOf<String?>(null) }
     var localRating by remember { mutableStateOf(0f..10f) }
 
-    LaunchedEffect(gridState) {
-        snapshotFlow { gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisible ->
                 if (lastVisible != null && lastVisible >= state.titles.size - 4 && !state.isLoading) {
                     viewModel.loadNextPage()
@@ -292,24 +303,112 @@ fun BrowseScreen(
                 Text(state.error!!, modifier = Modifier.padding(16.dp))
             }
         } else {
-            LazyVerticalGrid(
-                state = gridState,
-                columns = GridCells.Fixed(3),
-                contentPadding = PaddingValues(14.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+            // Column header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    "#",
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.width(32.dp),
+                )
+                Text(
+                    "TITLE",
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 10.sp,
+                    letterSpacing = 0.18.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f),
+                )
+                Text(
+                    "TYPE",
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 10.sp,
+                    letterSpacing = 0.18.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.width(52.dp),
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    "YEAR",
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 10.sp,
+                    letterSpacing = 0.18.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.width(36.dp),
+                    textAlign = TextAlign.End,
+                )
+            }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+
+            LazyColumn(
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
             ) {
-                items(state.titles) { movie ->
-                    MovieItem(
-                        movie = movie,
-                        onClick = { navController.navigate(Routes.titleDetails(movie.externalId)) },
-                    )
+                itemsIndexed(state.titles) { index, movie ->
+                    val year = movie.releaseDate.take(4).ifEmpty { "—" }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { navController.navigate(Routes.titleDetails(movie.externalId)) }
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "${index + 1}",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.width(32.dp),
+                        )
+                        Text(
+                            movie.title,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.weight(1f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .width(52.dp)
+                                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(0.dp))
+                                .padding(horizontal = 4.dp, vertical = 2.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                typeLabel(movie.type),
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 9.sp,
+                                letterSpacing = 0.1.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        Text(
+                            year,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.width(36.dp),
+                            textAlign = TextAlign.End,
+                        )
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
                 }
+
                 if (state.isLoading) {
                     item {
                         Box(
-                            modifier = Modifier.padding(16.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
                             contentAlignment = Alignment.Center,
                         ) {
                             CircularProgressIndicator(
