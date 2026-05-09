@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.androidx.media3.ui)
 
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.markdown.renderer)
 
     testImplementation(libs.junit)
     testImplementation(libs.turbine)

@@ -48,6 +48,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import br.com.cesarsicas.androidmovieflix.domain.model.ChatMessage
+import com.mikepenz.markdown.compose.Markdown
+import com.mikepenz.markdown.model.markdownColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -276,12 +278,18 @@ private fun VhsMessageBubble(message: ChatMessage) {
                         modifier = Modifier.padding(bottom = 2.dp),
                     )
                 }
-                Text(
-                    text = message.content.ifEmpty { if (message.isStreaming) "…" else "" },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (isUser) MaterialTheme.colorScheme.onPrimary
-                    else MaterialTheme.colorScheme.onSurface,
-                )
+                if (isUser) {
+                    Text(
+                        text = message.content.ifEmpty { if (message.isStreaming) "…" else "" },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                } else {
+                    Markdown(
+                        content = message.content.ifEmpty { if (message.isStreaming) "…" else "" },
+                        colors = markdownColor(text = MaterialTheme.colorScheme.onSurface),
+                    )
+                }
             }
         }
     }
