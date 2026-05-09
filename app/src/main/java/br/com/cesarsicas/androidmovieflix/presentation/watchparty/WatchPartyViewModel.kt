@@ -37,8 +37,14 @@ class WatchPartyViewModel @Inject constructor(
     private var pollingJob: Job? = null
     private var elapsedJob: Job? = null
 
-    init {
-        loadTransmission()
+    fun onScreenVisible() {
+        if (_state.value.transmission == null && pollingJob?.isActive != true) {
+            loadTransmission()
+        }
+    }
+
+    fun onScreenHidden() {
+        pollingJob?.cancel()
     }
 
     private fun loadTransmission() {
