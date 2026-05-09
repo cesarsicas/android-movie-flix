@@ -1,6 +1,12 @@
+
+
+
 # ReactFlix Android
 
 Android client for the ReactFlix movie-streaming platform. Built with Jetpack Compose and Material 3, styled with a VHS/retro aesthetic.
+
+https://github.com/user-attachments/assets/022d2d3c-5172-4851-981c-a88bc2159cfd
+
 
 ## Tech Stack
 
