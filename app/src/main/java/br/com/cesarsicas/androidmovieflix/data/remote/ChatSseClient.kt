@@ -1,9 +1,11 @@
 package br.com.cesarsicas.androidmovieflix.data.remote
 
 import br.com.cesarsicas.androidmovieflix.BuildConfig
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -62,5 +64,5 @@ class ChatSseClient @Inject constructor(
         }
 
         awaitClose { call.cancel() }
-    }
+    }.flowOn(Dispatchers.IO)
 }
