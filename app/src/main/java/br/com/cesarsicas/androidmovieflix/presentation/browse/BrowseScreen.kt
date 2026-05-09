@@ -1,11 +1,13 @@
 package br.com.cesarsicas.androidmovieflix.presentation.browse
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,15 +15,17 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,13 +38,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import br.com.cesarsicas.androidmovieflix.presentation.common.AppTopBar
 import br.com.cesarsicas.androidmovieflix.presentation.common.MovieItem
 import br.com.cesarsicas.androidmovieflix.presentation.navigation.Routes
+import androidx.compose.foundation.BorderStroke
 
 private val TITLE_TYPES = listOf(
     null to "All",
@@ -95,8 +102,9 @@ fun BrowseScreen(
             isLoggedIn = false,
         )
 
-        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        // Type filter chips
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 8.dp)) {
+            FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 TITLE_TYPES.forEach { (value, label) ->
                     FilterChip(
                         selected = localType == value,
@@ -104,60 +112,145 @@ fun BrowseScreen(
                             localType = value
                             viewModel.applyFilters(type = value, genreIds = localGenres, sortBy = localSort)
                         },
-                        label = { Text(label) },
+                        label = {
+                            Text(
+                                label.uppercase(),
+                                fontFamily = FontFamily.Monospace,
+                                fontSize = 11.sp,
+                                letterSpacing = 0.12.sp,
+                            )
+                        },
+                        shape = RoundedCornerShape(0.dp),
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                        border = FilterChipDefaults.filterChipBorder(
+                            enabled = true,
+                            selected = localType == value,
+                            borderColor = MaterialTheme.colorScheme.outline,
+                            selectedBorderColor = MaterialTheme.colorScheme.primary,
+                        ),
                     )
                 }
             }
 
-            Box {
-                OutlinedButton(onClick = { sortMenuExpanded = true }) {
-                    Text("Sort: ${SORT_OPTIONS.find { it.first == localSort }?.second ?: "Default"}")
-                }
-                DropdownMenu(expanded = sortMenuExpanded, onDismissRequest = { sortMenuExpanded = false }) {
-                    SORT_OPTIONS.forEach { (value, label) ->
-                        DropdownMenuItem(
-                            text = { Text(label) },
-                            onClick = {
-                                localSort = value
-                                sortMenuExpanded = false
-                                viewModel.applyFilters(type = localType, genreIds = localGenres, sortBy = value)
-                            },
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(top = 8.dp),
+            ) {
+                Box {
+                    OutlinedButton(
+                        onClick = { sortMenuExpanded = true },
+                        shape = RoundedCornerShape(0.dp),
+                        border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.outline),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                        ),
+                    ) {
+                        Text(
+                            "SORT: ${SORT_OPTIONS.find { it.first == localSort }?.second?.uppercase() ?: "DEFAULT"}",
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 11.sp,
+                            letterSpacing = 0.12.sp,
                         )
                     }
+                    DropdownMenu(expanded = sortMenuExpanded, onDismissRequest = { sortMenuExpanded = false }) {
+                        SORT_OPTIONS.forEach { (value, label) ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        label,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 12.sp,
+                                    )
+                                },
+                                onClick = {
+                                    localSort = value
+                                    sortMenuExpanded = false
+                                    viewModel.applyFilters(type = localType, genreIds = localGenres, sortBy = value)
+                                },
+                            )
+                        }
+                    }
                 }
-            }
-
-            OutlinedButton(onClick = { filtersExpanded = !filtersExpanded }) {
-                Text(if (filtersExpanded) "Hide Filters" else "More Filters")
+                OutlinedButton(
+                    onClick = { filtersExpanded = !filtersExpanded },
+                    shape = RoundedCornerShape(0.dp),
+                    border = BorderStroke(1.5.dp, MaterialTheme.colorScheme.outline),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onSurface,
+                    ),
+                ) {
+                    Text(
+                        if (filtersExpanded) "HIDE FILTERS" else "MORE FILTERS",
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 11.sp,
+                        letterSpacing = 0.12.sp,
+                    )
+                }
             }
 
             if (filtersExpanded) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    color = MaterialTheme.colorScheme.outline,
+                )
 
                 if (state.genres.isNotEmpty()) {
-                    Text("Genres", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        "GENRES",
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 11.sp,
+                        letterSpacing = 0.18.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 4.dp),
+                    )
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         state.genres.forEach { genre ->
                             FilterChip(
                                 selected = genre.id in localGenres,
                                 onClick = {
-                                    localGenres = if (genre.id in localGenres) {
-                                        localGenres - genre.id
-                                    } else {
-                                        localGenres + genre.id
-                                    }
+                                    localGenres = if (genre.id in localGenres) localGenres - genre.id
+                                    else localGenres + genre.id
                                     viewModel.applyFilters(type = localType, genreIds = localGenres, sortBy = localSort)
                                 },
-                                label = { Text(genre.name) },
+                                label = {
+                                    Text(
+                                        genre.name.uppercase(),
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 11.sp,
+                                        letterSpacing = 0.12.sp,
+                                    )
+                                },
+                                shape = RoundedCornerShape(0.dp),
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                ),
+                                border = FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = genre.id in localGenres,
+                                    borderColor = MaterialTheme.colorScheme.outline,
+                                    selectedBorderColor = MaterialTheme.colorScheme.primary,
+                                ),
                             )
                         }
                     }
                 }
 
                 Text(
-                    "Rating: ${localRating.start.toInt()}–${localRating.endInclusive.toInt()}",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
+                    "RATING ★ ${localRating.start.toInt()}–${localRating.endInclusive.toInt()}",
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 11.sp,
+                    letterSpacing = 0.18.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
                 )
                 RangeSlider(
                     value = localRating,
@@ -177,35 +270,52 @@ fun BrowseScreen(
             }
         }
 
-        HorizontalDivider()
+        HorizontalDivider(color = MaterialTheme.colorScheme.outline)
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                "${state.totalResults} TITLES",
+                fontFamily = FontFamily.Monospace,
+                fontSize = 11.sp,
+                letterSpacing = 0.18.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
 
         if (state.error != null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(state.error!!, modifier = Modifier.padding(16.dp))
             }
         } else {
-            Text(
-                "${state.totalResults} titles",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-            )
             LazyVerticalGrid(
                 state = gridState,
-                columns = GridCells.Adaptive(minSize = 120.dp),
-                contentPadding = PaddingValues(16.dp),
+                columns = GridCells.Fixed(3),
+                contentPadding = PaddingValues(14.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 items(state.titles) { movie ->
                     MovieItem(
                         movie = movie,
                         onClick = { navController.navigate(Routes.titleDetails(movie.externalId)) },
-                        modifier = Modifier.padding(4.dp),
                     )
                 }
                 if (state.isLoading) {
                     item {
-                        Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator()
+                        Box(
+                            modifier = Modifier.padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            CircularProgressIndicator(
+                                color = MaterialTheme.colorScheme.primary,
+                                strokeWidth = 2.dp,
+                            )
                         }
                     }
                 }

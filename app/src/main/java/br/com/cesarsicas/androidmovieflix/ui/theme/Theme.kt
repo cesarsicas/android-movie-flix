@@ -1,58 +1,73 @@
 package br.com.cesarsicas.androidmovieflix.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = VhsPrimaryDark,
+    onPrimary = VhsOnPrimaryDark,
+    primaryContainer = VhsPrimaryContainerDark,
+    onPrimaryContainer = VhsOnSurface,
+    secondary = VhsSecondary,
+    onSecondary = VhsOnPrimaryDark,
+    tertiary = VhsTertiary,
+    onTertiary = VhsOnSurface,
+    error = VhsError,
+    onError = VhsOnSurface,
+    background = VhsSurface,
+    onBackground = VhsOnSurface,
+    surface = VhsSurface,
+    onSurface = VhsOnSurface,
+    surfaceVariant = VhsSurface2,
+    onSurfaceVariant = VhsOnSurfaceVariant,
+    surfaceContainer = VhsSurfaceContainer,
+    surfaceContainerHigh = VhsSurface1,
+    surfaceContainerHighest = VhsSurface2,
+    outline = VhsOutline,
+    outlineVariant = VhsOutlineVariant,
+    inverseSurface = VhsOnSurface,
+    inverseOnSurface = VhsSurface,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = VhsPrimaryLight,
+    onPrimary = VhsOnPrimaryLight,
+    primaryContainer = VhsPrimaryContainerLight,
+    onPrimaryContainer = VhsOnSurfaceLight,
+    secondary = VhsSecondary,
+    onSecondary = VhsOnSurfaceLight,
+    tertiary = VhsTertiary,
+    onTertiary = VhsOnSurfaceLight,
+    error = VhsError,
+    onError = VhsOnSurfaceLight,
+    background = VhsSurfaceLight,
+    onBackground = VhsOnSurfaceLight,
+    surface = VhsSurfaceLight,
+    onSurface = VhsOnSurfaceLight,
+    surfaceVariant = VhsSurface2Light,
+    onSurfaceVariant = VhsOnSurfaceVariantLight,
+    surfaceContainer = VhsSurfaceContainerLight,
+    surfaceContainerHigh = VhsSurface1Light,
+    surfaceContainerHighest = VhsSurface2Light,
+    outline = VhsOutlineLight,
+    outlineVariant = VhsOutlineVariantLight,
+    inverseSurface = VhsOnSurfaceLight,
+    inverseOnSurface = VhsSurfaceLight,
 )
 
 @Composable
 fun AndroidMovieFlixTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
     )
 }
