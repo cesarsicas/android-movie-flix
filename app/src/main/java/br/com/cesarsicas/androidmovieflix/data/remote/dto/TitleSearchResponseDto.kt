@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TitleSearchResponseDto(
     val name: String,
-    val relevance: Int? = null,
+    val relevance: Double? = null,
     val type: String? = null,
     val id: Int,
     val year: Int? = null,
